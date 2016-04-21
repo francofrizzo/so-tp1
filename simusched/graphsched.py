@@ -253,7 +253,7 @@ def drawGantt(data, fout, rg=3, width=1024, height=600, fontpath=None, settings=
 				else:
 					draw.rectangle((x,uy-1,nx,by+1), fill=COLORS[st][0])
 					draw.rectangle((x+1-(2 if extend else 0),uy,nx-2,by), fill=COLORS[st][1])
-					if unloadedx <> -1:
+					if unloadedx != -1:
 						if pids[i] >= 0:
 							dist = (x-unloadedx)/2
 							draw.text((unloadedx + dist -2, by-16), str(loadedj), font=font, fill=COLOR_BLACK)
