@@ -33,23 +33,28 @@ void TaskConsola(int pid, vector<int> params) { // params: n
 }
 
 void TaskBatch(int pid, vector<int> params) { // params: n
-	int total_cpu = params[0];
 	int cant_bloqueos = params[1];
+	int total_cpu = params[0] - cant_bloqueos - 1;
 
 	srand(time(0));
 
-	int t = 0;
-	int ultimo_t = 0;
-	
-	while(cant_bloqueos > 0){
-		int ciclos_libres = total_cpu - (cant_bloqueos * 2);
-		int ciclos_libres_norm = ciclos_libres/cant_bloqueos;
-		t = rand() % (ciclos_libres_norm) ;
-		ultimo_t = t + ultimo_t;
-		uso_IO(pid, ultimo_t);
-		total_cpu -= t;
-		cant_bloqueos--;
+	vector<int> ints;	
+		
+    int tInt;
+    for (int i = 0; i < cant_bloqueos; ++i){
+	    do{
+			tInt = rand() % total_cpu;
+		}while(find(ints.begin(), ints.end(), tInt) != ints.end());
+		ints.push_back(tInt);
 	}
+
+	sort(ints.begin(), ints.end());
+	for (int i = 0; i < cant_bloqueos; ++i){
+		int cpuBurst = i == 0 ? ints[i] : ints[i] - ints[i-1];
+		uso_CPU(pid,cpuBurst);
+		uso_IO(pid,2);
+	}
+	uso_CPU(pid,total_cpu - ints[cant_bloqueos - 1] );
 }
 
 void tasks_init(void) {
@@ -60,4 +65,5 @@ void tasks_init(void) {
 	register_task(TaskIO, 2);
 	register_task(TaskAlterno, -1);
 	register_task(TaskConsola, 3);
+	register_task(TaskBatch, 2);
 }

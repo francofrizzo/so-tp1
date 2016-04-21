@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <iostream>
+#include <algorithm>
 
 void tasks_init(void);
 
