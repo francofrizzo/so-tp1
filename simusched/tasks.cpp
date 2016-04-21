@@ -1,5 +1,6 @@
 #include "tasks.h"
 
+
 using namespace std;
 
 void TaskCPU(int pid, vector<int> params) { // params: n
@@ -28,6 +29,26 @@ void TaskConsola(int pid, vector<int> params) { // params: n
 	for(int i = 0; i < n; i++){
 		t = rand() % (bmax - bmin + 1) + bmin;
 		uso_IO(pid, t);
+	}
+}
+
+void TaskBatch(int pid, vector<int> params) { // params: n
+	int total_cpu = params[0];
+	int cant_bloqueos = params[1];
+
+	srand(time(0));
+
+	int t = 0;
+	int ultimo_t = 0;
+	
+	while(cant_bloqueos > 0){
+		int ciclos_libres = total_cpu - (cant_bloqueos * 2);
+		int ciclos_libres_norm = ciclos_libres/cant_bloqueos;
+		t = rand() % (ciclos_libres_norm) ;
+		ultimo_t = t + ultimo_t;
+		uso_IO(pid, ultimo_t);
+		total_cpu -= t;
+		cant_bloqueos--;
 	}
 }
 
