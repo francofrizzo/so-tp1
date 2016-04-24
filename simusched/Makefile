@@ -20,6 +20,9 @@ simu.o: simu.cpp simu.h basetask.h basesched.h
 simusched.o: simusched.cpp basetask.h basesched.h tasks.h
 tasks.o: tasks.cpp tasks.h basetask.h
 
+ejercicio1:
+	./simusched tasks/ej1.tsk 1 1 1 SchedFCFS | python graphsched.py > ../latex/imagenes/ej1.png
+
 clean:
 	rm -f $(OBJS) $(MAIN)
 
