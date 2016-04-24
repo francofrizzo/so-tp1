@@ -26,15 +26,5 @@
 *.exe
 *.out
 *.app
+
 simusched
-
-# Latex
-*.aux
-*.fdb_latexmk
-*.fls
-*.log
-*.synctex.gz
-*.toc
-
-# Compiled Latex files
-*informe.pdf
