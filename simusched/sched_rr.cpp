@@ -66,7 +66,7 @@ int SchedRR::tick(int cpu, const enum Motivo m) {
 			else{
 				next_pid = current_pid(cpu);
 			}
-		else{
+		}else{
 			// Si llega un EXIT o un BLOCK, desalojo la tarea
 			// En caso de haber otro proceso en la cola, lo asigno
 			if(!this->q.empty()){
