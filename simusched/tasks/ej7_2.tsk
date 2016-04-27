@@ -1,5 +1,6 @@
-TaskAlterno 4 2 4 2 4 2  
-TaskAlterno 4 2 4 2 4 2  
-TaskAlterno 4 2 4 2 4 2  
+TaskAlterno 2 20 10
+TaskCPU 20 
+TaskCPU 20  
+TaskCPU 20
 
 
