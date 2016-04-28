@@ -86,28 +86,23 @@ int SchedNoMistery::next() {
 	int next_pid = IDLE_TASK;
 	// Si se desbloqueo un pibe y tengo q "recompensarlo"
 	if (this->cur_pri != -1){
-		//cout << "cur_pri: " << this->cur_pri << endl;
+		
 		this->n = this->unblock_to[this->cur_pri];
 		
 		next_pid = this->cur_pri ;
+		// cout << "cur_pri: " << this->cur_pri << endl;
+		// cout << "n: " << this->n << endl;
 		this->cur_pri = -1;
 	}else{
-		if(!this->vq[this->n].empty()){
-			// desencolo y asigno al primero
-			next_pid = this->vq[this->n].front();
-			this->vq[this->n].pop();
-		}else{
-			// busco al siguiente
-			for (int i = this->n; i < this->def_quantum.size(); ++i){
-				if(!this->vq[i].empty()){
-					this->n = i;
-					// desencolo y asigno al primero
-					next_pid = this->vq[this->n].front();
-					this->vq[this->n].pop();
-					break;
-				}
+		// busco al siguiente
+		for (int i = this->n; i < this->def_quantum.size(); ++i){
+			if(!this->vq[i].empty()){
+				this->n = i;
+				// desencolo y asigno al primero
+				next_pid = this->vq[this->n].front();
+				this->vq[this->n].pop();
+				break;
 			}
-			
 		}
 	}
 	
