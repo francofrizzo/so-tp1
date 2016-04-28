@@ -67,8 +67,13 @@ int SchedNoMistery::tick(int cpu, const enum Motivo m) {
 		}else if(m == BLOCK){
 			//cout << "BLOCK : " << current_pid(cpu) << endl;
 			next_pid = next();
+
 			this->quantum = this->def_quantum[this->n];
-			this->unblock_to[current_pid(cpu)] = this->n;
+			// cuando se desbloque o bloqueo le subo la prioridad si puedo
+			if(this->n > 0)
+				this->unblock_to[current_pid(cpu)] = this->n -1;
+			else
+				this->unblock_to[current_pid(cpu)] = this->n;
 		}else if (m == EXIT){
 			// Elijo el nuevo pid
 			next_pid = next();
@@ -86,9 +91,9 @@ int SchedNoMistery::next() {
 	int next_pid = IDLE_TASK;
 	// Si se desbloqueo un pibe y tengo q "recompensarlo"
 	if (this->cur_pri != -1){
-		
-		this->n = this->unblock_to[this->cur_pri];
-		
+
+		this->n = this->unblock_to[this->cur_pri] ;
+	
 		next_pid = this->cur_pri ;
 		// cout << "cur_pri: " << this->cur_pri << endl;
 		// cout << "n: " << this->n << endl;
