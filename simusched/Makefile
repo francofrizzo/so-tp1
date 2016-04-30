@@ -29,6 +29,12 @@ ejercicio3:
 ejercicio4:
 	./simusched tasks/ej4.tsk 2 1 1 SchedRR 5 10 | python graphsched.py > ../latex/imagenes/ej4.png
 
+ejercicio5:
+	./simusched tasks/ej5.tsk 3 1 1 SchedRR 2 10 30 | python graphsched.py > ../latex/imagenes/ej5.png
+	./simusched tasks/ej5.tsk 1 2 1 SchedRR 2 | python graphsched.py > ../latex/imagenes/ej5_q2.png
+	./simusched tasks/ej5.tsk 1 2 1 SchedRR 10 | python graphsched.py > ../latex/imagenes/ej5_q10.png
+	./simusched tasks/ej5.tsk 1 2 1 SchedRR 30 | python graphsched.py > ../latex/imagenes/ej5_q30.png
+
 clean:
 	rm -f $(OBJS) $(MAIN)
 
