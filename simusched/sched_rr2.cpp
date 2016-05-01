@@ -9,7 +9,7 @@ using namespace std;
 SchedRR2::SchedRR2(vector<int> argn) {
 	// Round robin recibe la cantidad de cores y sus cpu_quantum por parámetro
 
-    ncores = argn[1];  // guardo la cantidad de cores
+    ncores = argn[0];  // guardo la cantidad de cores
 
     // Inicialización de estructuras
     q           = std::vector< std::queue<int> *>(ncores);
@@ -22,7 +22,7 @@ SchedRR2::SchedRR2(vector<int> argn) {
         q[i]     = new std::queue<int>;  // cola asociada al core
         tasks[i] = new std::vector<int>; // vector de tareas asociadas al core
 
-        int quantum_size = argn[i + 2];  // tiempo de quantum del core
+        int quantum_size = argn[i + 1];  // tiempo de quantum del core
         cpu_quantum[i] = quantum_size;   // este se va a ir decrementando
         def_quantum[i] = quantum_size;   // este queda fijo
     }
