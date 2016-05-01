@@ -6,133 +6,110 @@
 using namespace std;
 
 SchedNoMistery::SchedNoMistery(vector<int> argn) {
-	cout << "SchedNoMistery"<< endl;
-	// MFQ recibe los quantums por parÃ¡metro
-	for(int i = 0; i < (int)argn.size(); i++) {
-		// los diferentes cuantos para cada cola de prioridad
+  // MFQ recibe los quantums por parÃ¡metro
+  // Levanto el tamaño de las pilas
+	for(unsigned int i = 0; i < argn.size(); i++) {
 		this->def_quantum.push_back(argn[i]);
 		this->vq.push_back(queue<int>());
 	}
-	// voy a emepezar en la cola 0
-	quantum = def_quantum[0];
-	n = 0;
+	
+	// Empiezo en la cola 0
+	this->n = 0;
+	//asigno la cantidad de quantums
+	this->quantum = this->def_quantum[0];
+	// Nadie tiene un Quantum de bonificacion por bloqueo
+	this->cur_pri = -1;
 }
 
 void SchedNoMistery::load(int pid) {
-	cout << "load"<< endl;
-	this->vq[n].push(pid); // llegó una tarea nueva
+	// Llega un nuevo proceso lo encolo en la cola actual
+	//cout << "load : " << pid << endl;
+ 	this->vq[this->n].push(pid);
+ 	this->unblock_to.push_back(this->n);
 }
 
 void SchedNoMistery::unblock(int pid) {
-	// se desbloqueo una tarea: La pongo a correr dsp de la tarea actual
-	cout << "unblock"<< endl;
-	this->vq[n].push(pid); 
-	this->unblock_to[n]= pid;
+	//cout << "UNBLOCK : " << pid << endl;
+	this->cur_pri = pid;
+
 }
 
 int SchedNoMistery::tick(int cpu, const enum Motivo m) {
-	cout << "tarea : " <<  current_pid(cpu) << endl;
-	cout << "quantum : " <<  this->quantum << endl;
-	bool noEsUltimaCola = this->n <( this->def_quantum.size() -1 );
-	int next_pid = IDLE_TASK;
+	int next_pid ;
 	if(current_pid(cpu) == IDLE_TASK){
-		cout << "IDLE_TASK "<< endl;
-		if(!this->vq[n].empty()){
-			next_pid = this->vq[n].front();
-			this->vq[n].pop();
-			this->quantum = this->def_quantum[n];
-		}else{
-			if (noEsUltimaCola){
-				if(!this->vq[n+1].empty()){
-					// Sigo con el siguiente de la cola de menor prioridad
-					this->n++;
-					next_pid = this->vq[n].front();
-					this->vq[n].pop();
-					this->quantum = this->def_quantum[n];
-				}
-			}
-		}
+		// Si no está corriendo ninguna tarea y la cola tiene elementos,
+		// desencolo y asigno al primero
+		next_pid = next();
 	}
 	else{
-		switch(m){
-			case TICK:
-				cout << "quantum : " <<  this->quantum << endl;
-				this->quantum--;
-				if (this->quantum == 0  ){
-					
-					// le toca al que viene
-					if(!this->vq[n].empty()){
-						//todavia hay pibes en la cola 
-						next_pid = this->vq[n].front();
-						this->vq[n].pop();
-						this->quantum = this->def_quantum[n];
-					}else{
-						if(noEsUltimaCola){
-							// me fijo en la sig cola
-							if(!this->vq[n+1].empty()){
-								this->n++;
-								next_pid = this->vq[n].front();
-								this->vq[n].pop();
-								this->quantum = this->def_quantum[n];
-							}else{
-								// Es el único programa para correr
-								next_pid = current_pid(cpu);
-								this->quantum = this->def_quantum[n];
-							}
-						}else{
-							// Es el único programa para correr
-							next_pid = current_pid(cpu);
-							this->quantum = this->def_quantum[n];
-						}
-						
-					}
+	// Si estaba corriendo una tarea
+		if(m == TICK){
+			
 
-					// Gaste todo mi quantum
-					if(noEsUltimaCola){
-						// Puedo moverlo a una cola con menor prioridad
-						this->vq[n+1].push(current_pid(cpu)); 
-					}else{
-						this->vq[n].push(current_pid(cpu));
-					}
+			// Si llega un tick, primero decremento su quantum restante
+			this->quantum--;
+			//cout << "tick : " << current_pid(cpu) << "quantum:" << this->quantum << endl;
+			if(this->quantum == 0){
+				// Si no estoy en la ultima cola 
+				if(this->n < (int) (this->def_quantum.size()-1)){
+					this->vq[this->n +1].push(current_pid(cpu));
+				}else{
+					this->vq[this->n].push(current_pid(cpu));
+				}
+				next_pid = next();
+				// Reinicio el quantum
+				this->quantum = this->def_quantum[this->n];
+			}
+			else{
+				// Todavia le queda quantum
+				next_pid = current_pid(cpu);
+			}
+		}else if(m == BLOCK){
+			//cout << "BLOCK : " << current_pid(cpu) << endl;
+			next_pid = next();
 
-				}else{
-					// me queda quantum 
-					next_pid = current_pid(cpu);
-				}
-				break;
-			case BLOCK:
-				// if(!this->q.empty()){
-				// 	next_pid = this->q.front();
-				// 	this->q.pop();
-				// }
-				// this->def_quantum[cpu] = this->def_quantum[cpu];
-				break;
-			case EXIT:
-				cout << "termino ! " << endl;
-				if(!this->vq[n].empty()){
-					// Sigo con el siguiente de la cola actual
-					next_pid = this->vq[n].front();
-					this->vq[n].pop();
-					this->quantum = this->def_quantum[n];
-				}else{
-					if (noEsUltimaCola){
-						if(!this->vq[n+1].empty()){
-							// Sigo con el siguiente de la cola de menor prioridad
-							this->n++;
-							next_pid = this->vq[n].front();
-							this->vq[n].pop();
-							this->quantum = this->def_quantum[n];
-						}
-					}
-				}
-				
-				break;
+			this->quantum = this->def_quantum[this->n];
+			// cuando se desbloque o bloqueo le subo la prioridad si puedo
+			if(this->n > 0)
+				this->unblock_to[current_pid(cpu)] = this->n -1;
+			else
+				this->unblock_to[current_pid(cpu)] = this->n;
+		}else if (m == EXIT){
+			// Elijo el nuevo pid
+			next_pid = next();
+			// Reinicio el quantum
+			this->quantum = this->def_quantum[this->n];
 		}
 	}
-	cout << "next_pid : " <<  next_pid << endl;
+	
 	return next_pid;
 }
 
-int SchedNoMistery::next(void) {
-  // Elijo el nuevo pid
+int SchedNoMistery::next() {
+	// Elijo el nuevo pid
+	// Si no está corriendo ninguna tarea y la cola tiene elementos,
+	int next_pid = IDLE_TASK;
+	// Si se desbloqueo un pibe y tengo q "recompensarlo"
+	if (this->cur_pri != -1){
+
+		this->n = this->unblock_to[this->cur_pri] ;
+	
+		next_pid = this->cur_pri ;
+		// cout << "cur_pri: " << this->cur_pri << endl;
+		// cout << "n: " << this->n << endl;
+		this->cur_pri = -1;
+	}else{
+		// busco al siguiente
+		for (unsigned int i = this->n; i < this->def_quantum.size(); ++i){
+			if(!this->vq[i].empty()){
+				this->n = i;
+				// desencolo y asigno al primero
+				next_pid = this->vq[this->n].front();
+				this->vq[this->n].pop();
+				break;
+			}
+		}
+	}
+	
+	return next_pid;
 }

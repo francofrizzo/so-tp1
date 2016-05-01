@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <queue>
+#include <iostream>
 #include "basesched.h"
 #include <iostream>
 
@@ -18,9 +19,9 @@ class SchedNoMistery : public SchedBase {
     std::vector<int> def_quantum;
     std::vector<int> unblock_to;
     int quantum, n, cur_pri;
-    // quantum cuantos cuantums le queda a la tarea actual
-    //
+
     int next(void);
+
 };
 
 #endif

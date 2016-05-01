@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <queue>
+#include <algorithm>  // find
 #include "basesched.h"
 
 class SchedRR2 : public SchedBase {
@@ -19,10 +20,14 @@ class SchedRR2 : public SchedBase {
 		std::vector< std::vector<int> *> tasks;
 		std::vector<int> cpu_quantum;
 		std::vector<int> def_quantum;
+		std::vector<int> proc_count;
 		int	lastcpu;
 		int ncores;
 //<<<REMOVE END>>>
 		int next(int cpu);
+		int find_cpu(int pid);
 };
+
+unsigned int min_index(const std::vector<int>);
 
 #endif

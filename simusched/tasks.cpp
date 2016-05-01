@@ -19,7 +19,7 @@ void TaskAlterno(int pid, vector<int> params) { // params: ms_pid, ms_io, ms_pid
 	}
 }
 
-void TaskConsola(int pid, vector<int> params) { // params: n
+void TaskConsola(int pid, vector<int> params) { // params: ni, bmin, bmax
 	int n = params[0];
 	int bmin = params[1];
 	int bmax = params[2];
