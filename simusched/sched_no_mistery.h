@@ -5,6 +5,7 @@
 #include <queue>
 #include <iostream>
 #include "basesched.h"
+#include <iostream>
 
 class SchedNoMistery : public SchedBase {
   public:
@@ -19,7 +20,8 @@ class SchedNoMistery : public SchedBase {
     std::vector<int> unblock_to;
     int quantum, n, cur_pri;
 
-    int next();
+    int next(void);
+
 };
 
 #endif

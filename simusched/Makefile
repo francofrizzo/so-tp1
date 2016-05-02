@@ -24,7 +24,7 @@ ejercicio1:
 	./simusched tasks/ej1.tsk 1 1 1 SchedFCFS | python graphsched.py > ../latex/imagenes/ej1.png
 
 ejercicio3:
-	./simusched tasks/ej2.tsk 1 1 1 SchedFCFS | python graphsched.py > ../latex/imagenes/ej3.png
+	./simusched tasks/ej3.tsk 1 1 1 SchedFCFS | python graphsched.py > ../latex/imagenes/ej3.png
 
 ejercicio4:
 	./simusched tasks/ej4.tsk 2 1 1 SchedRR 5 10 | python graphsched.py > ../latex/imagenes/ej4.png
@@ -34,6 +34,14 @@ ejercicio5:
 	./simusched tasks/ej5.tsk 1 2 1 SchedRR 2 | python graphsched.py > ../latex/imagenes/ej5_q2.png
 	./simusched tasks/ej5.tsk 1 2 1 SchedRR 10 | python graphsched.py > ../latex/imagenes/ej5_q10.png
 	./simusched tasks/ej5.tsk 1 2 1 SchedRR 30 | python graphsched.py > ../latex/imagenes/ej5_q30.png
+
+ejercicio6:
+	./simusched tasks/ej5.tsk 1 2 1 SchedFCFS | python graphsched.py > ../latex/imagenes/ej6.png
+
+ejercicio7:
+	./simusched tasks/ej7_1.tsk 1 1 1 SchedMistery 5 10 | python graphsched.py > ../latex/imagenes/ej7_1.png
+	./simusched tasks/ej7_2.tsk 1 1 1 SchedMistery 5 10 | python graphsched.py > ../latex/imagenes/ej7_2.png
+	./simusched tasks/ej7_3.tsk 1 1 1 SchedMistery 5 10 | python graphsched.py > ../latex/imagenes/ej7_3.png
 
 clean:
 	rm -f $(OBJS) $(MAIN)
