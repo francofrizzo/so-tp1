@@ -1,1 +1,52 @@
 \section{Ejercicio 8}
+
+Se pedía implementar un scheduler, \texttt{SchedRR2}, con modalidad Round-Robin
+y que no permitiera migrar los procesos entre núcleos. El CPU correspondiente a
+cada proceso es seleccionado durante su carga, correspondiendo en cada caso
+aquel con menor cantidad total de procesos activos.
+
+\subsection{Implementación del scheduler}
+
+Al igual que en ejercicios anteriores, el constructor del scheduler recibe por
+parámetro la cantidad de cores y el tiempo del \emph{quantum} correspondiente a
+cada uno de ellos. Estos valores son almacenados, guardando por duplicado la
+duración de los \emph{quantums} para luego poder ir decrementando una de las
+copias. Durante la inicialización, además, se crean estas estructuras
+adicionales: un vector para almacenar la cantidad de procesos que se están
+ejecutando en cada procesador, un vector de vectores que contiene los PIDs de
+cada uno de ellos, y un vector con las colas de \emph{ready} correspondientes a
+cada \emph{core}.
+
+Al cargar un proceso en el scheduler, se utiliza el primero de los vectores
+mencionados para seleccionar el núcleo que tenga menos procesos activos. Luego
+el proceso recién cargado se agrega en la cola de \emph{ready} del core y en su
+lista de tareas activas, y se incrementa en uno su contador de procesos.
+
+Cuando se produce una llamada a la función \texttt{tick}, es decir, cuando se
+produce un \emph{tick} del reloj de algún CPU y el \emph{scheduler} es invocado,
+se realizan diferentes acciones según cuál haya sido la actividad de la CPU
+durante el \emph{quantum} anterior.
+
+En varias ocasiones se relizan llamadas a la función auxiliar \texttt{next}, que
+desencola la próxima tarea de la cola de \emph{ready} de una CPU y devuelve su
+PID, en caso de que esto sea posible, y en caso contrario devuelve el PID de la tarea \emph{idle}. Además, esta función reinicia el contador de tiempo de
+\emph{quantum} restante del CPU a su valor inicial.
+
+\begin{enumerate}
+    \item Si el proceso anterior consumió todo el ciclo de CPU, puede tratarse
+    de la tarea \emph{idle}, en cuyo caso simplemente se realiza una llamada a
+    \texttt{next}, o bien puede tratarse de otra tarea en ejecución. En este
+    caso se chequea si aún sobra tiempo del \emph{quantum} actual. De ser así,
+    se decrementa en uno el contador de tiempo restante y se decide que siga
+    ejecutando el mismo proceso. En caso contrario, se desaloja al proceso
+    utilizando la función \texttt{next} y se lo vuelve a colocar en la cola de
+    \emph{ready}.
+    \item Si el proceso anterior realizó una llamada bloqueante, simplemente se
+    lo desaloja con la función \texttt{next}. Cuando el proceso se desbloquee,
+    la función \texttt{unblock} se encargará de hacerlo volver a la cola de
+    \emph{ready}.
+    \item Si el proceso anterior acaba de terminar, entonces se lo reemplaza por
+    el proceso siguiente ejecutando \texttt{next} y, además, se lo elimina de
+    las lista de tareas activas del CPU donde estaba registrado. También se
+    decrementa en uno el contador de tareas activas de este CPU.
+\end{enumerate}
