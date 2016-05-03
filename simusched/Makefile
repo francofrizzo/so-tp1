@@ -48,6 +48,12 @@ ejercicio7:
 	./simusched tasks/ej7_2.tsk 1 1 1 SchedMistery 5 10 | python graphsched.py > ../latex/imagenes/ej7_2.png
 	./simusched tasks/ej7_3.tsk 1 1 1 SchedMistery 5 10 | python graphsched.py > ../latex/imagenes/ej7_3.png
 
+ejercicio8:
+	./simusched tasks/ej8_1.tsk 2 1 4 SchedRR 5 8 | python graphsched.py > ../latex/imagenes/ej8_1_rr.png
+	./simusched tasks/ej8_1.tsk 2 1 4 SchedRR2 5 8 | python graphsched.py > ../latex/imagenes/ej8_1_rr2.png
+	./simusched tasks/ej8_2.tsk 2 1 4 SchedRR 12 4 | python graphsched.py > ../latex/imagenes/ej8_2_rr.png
+	./simusched tasks/ej8_2.tsk 2 1 4 SchedRR2 12 4 | python graphsched.py > ../latex/imagenes/ej8_2_rr2.png
+
 clean:
 	rm -f $(OBJS) $(MAIN)
 
