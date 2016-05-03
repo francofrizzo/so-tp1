@@ -50,3 +50,74 @@ PID, en caso de que esto sea posible, y en caso contrario devuelve el PID de la 
     las lista de tareas activas del CPU donde estaba registrado. También se
     decrementa en uno el contador de tareas activas de este CPU.
 \end{enumerate}
+
+\subsection{Experimentación}
+
+Se pedía realizar una comparación entre este criterio de \emph{scheduling}
+y otro que sí permitiera la migración entre procesadores. Con este fin, se
+comparó el \emph{scheduler} obtenido con el desarrollado anteriormente en el
+Ejercicio 4 (\texttt{SchedRR}).
+
+Para comparar los resultados producidos por ambos \emph{schedulers}, se
+plantearon dos ejemplos de escenarios reales en los que cada uno de los modelos
+resultara superior al otro. Los escenarios ideados fueron los siguientes:
+
+\begin{enumerate}
+    \item En una máquina con dos CPUs y un coste de migración apreciable, se
+    ejecutan simultáneamente tres tareas que hacen un uso intensivo del
+    procesador. Además, los tiempos de \emph{quantum} asociados a cada
+    procesador son diferentes. En estas circunstancias, es esperable que un
+    scheduler con migración produzca que los procesos estén cambiando de CPU de
+    manera constante, generando un gran desperdicio de recursos. Este efecto
+    seguramente afecte negativamente métricas como el \emph{waiting-time} y el
+    \emph{turnaround} de los procesos, lo cual es indeseable en este tipo de
+    tareas no interactivas. Cabe destacar que en el caso del \emph{scheduler}
+    \texttt{SchedRR2} uno de los procesos tendrá un CPU asignado de forma
+    exclusiva, mientras que los otros dos tendrán que ``repartirse'' el otro
+    \emph{core}, reduciendo la \emph{justicia} del algoritmo. No obstante,
+    teniendo en cuenta lo antes planteado, en este contexto es claramente
+    preferible un algoritmo de \emph{scheduling} sin migración.
+
+    \item También en una máquina con dos CPUs, se ejecuta una tarea que hace un
+    uso intensivo del CPU y varias tareas interactivas, es
+    decir, que hacen un gran uso de entrada/salida. Aquí el \emph{scheduler} sin
+    migración asignará a la mitad de las tareas interactivas el mismo
+    \emph{core} que a la tarea intensiva, provocando una disminución en la 
+    \emph{latencia} o tiempo de respuesta de las mismas, como así también en su
+    tiempo de espera o \emph{waiting-time}. El \emph{scheduler} con migración,
+    en cambio, permitirá que, mientras la tarea intesiva utiliza un procesador, 
+    cualquiera de las tareas interactivas pueda ocupar el otro, obteniendo así
+    mejores resultados.
+\end{enumerate}
+
+A continuación se muestran los gráficos y las mediciones obtenidas en ambas
+implementaciones para los lotes de tareas \texttt{ej8\_1} y \texttt{ej8\_2},
+realizados según los dos escenarios recién propuestos.
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=1\columnwidth]{imagenes/ej8_1_rr.png}
+        \caption{Escenario 1 en \emph{scheduler} con migración (\texttt{SchedRR})}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=1\columnwidth]{imagenes/ej8_1_rr2.png}
+        \caption{Escenario 1 en \emph{scheduler} sin migración (\texttt{SchedRR2})}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=1\columnwidth]{imagenes/ej8_2_rr.png}
+        \caption{Escenario 2 en \emph{scheduler} con migración (\texttt{SchedRR})}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=1\columnwidth]{imagenes/ej8_2_rr2.png}
+        \caption{Escenario 2 en \emph{scheduler} sin migración (\texttt{SchedRR2})}
+    \end{center}
+\end{figure}
