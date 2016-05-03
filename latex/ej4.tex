@@ -29,7 +29,8 @@ actual y se le reinicia su quantum.
 
 Si el motivo es \texttt{BLOCK} o \texttt{EXIT}, la tarea actual es desalojada
 dándole lugar a la próxima en la cola y reiniciando el quantum a su valor
-inicial.
+inicial. En caso de que sea \texttt{BLOCK} y no haya otras tareas en la cola, el
+proceso actual no es desalojado.
 
 \begin{figure}[ht]
 	\begin{center}
