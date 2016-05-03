@@ -70,8 +70,8 @@ int SchedRR2::tick(int cpu, const enum Motivo m) {
                     next_pid = curr_pid;
                 } else {
                     // Si no queda quantum, desalojo y busco al siguiente proceso
-                    next_pid = next(cpu);
                     q[cpu]->push(curr_pid);  // El actual vuelve a la cola
+                    next_pid = next(cpu);
                 }
 
             }
@@ -94,9 +94,6 @@ int SchedRR2::tick(int cpu, const enum Motivo m) {
             break;
     }
 
-    if (next_pid == IDLE_TASK) {
-    } else {
-    }
     return next_pid;
 }
 
