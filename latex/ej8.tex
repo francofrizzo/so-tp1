@@ -29,7 +29,8 @@ durante el \emph{quantum} anterior.
 
 En varias ocasiones se relizan llamadas a la función auxiliar \texttt{next}, que
 desencola la próxima tarea de la cola de \emph{ready} de una CPU y devuelve su
-PID, en caso de que esto sea posible, y en caso contrario devuelve el PID de la tarea \emph{idle}. Además, esta función reinicia el contador de tiempo de
+PID, en caso de que esto sea posible, y en caso contrario devuelve el PID de la
+tarea \emph{idle}. Además, esta función reinicia el contador de tiempo de
 \emph{quantum} restante del CPU a su valor inicial.
 
 \begin{enumerate}
@@ -110,6 +111,19 @@ realizados según los dos escenarios recién propuestos.
 
 \begin{figure}[H]
     \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Scheduler} & \textbf{Waiting-time} & \textbf{Turnaround} \\ \hline
+            \texttt{SchedRR}   & 32.333 & 60 \\
+            \texttt{SchedRR2}  & 18.333 & 46 \\ \hline
+        \end{tabular}
+        \caption{Tiempos promedio para el Escenario 1, para cada \emph{scheduler}}
+    \end{center}
+\end{figure}
+
+
+\begin{figure}[H]
+    \begin{center}
         \includegraphics[width=1\columnwidth]{imagenes/ej8_2_rr.png}
         \caption{Escenario 2 en \emph{scheduler} con migración (\texttt{SchedRR})}
     \end{center}
@@ -119,5 +133,17 @@ realizados según los dos escenarios recién propuestos.
     \begin{center}
         \includegraphics[width=1\columnwidth]{imagenes/ej8_2_rr2.png}
         \caption{Escenario 2 en \emph{scheduler} sin migración (\texttt{SchedRR2})}
+    \end{center}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Scheduler} & \textbf{Latencia} & \textbf{Waiting-time} \\ \hline
+            \texttt{SchedRR}   & 5.286 &  \\
+            \texttt{SchedRR2}  & 8.714 &  \\ \hline
+        \end{tabular}
+        \caption{Tiempos promedio para el Escenario 2, para cada \emph{scheduler}}
     \end{center}
 \end{figure}
