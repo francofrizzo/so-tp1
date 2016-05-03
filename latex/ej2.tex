@@ -1,6 +1,13 @@
 \section{Ejercicio 2}
 
-Se pedía escribir un lote de tareas que simulara la utilización de una computadora para resolver un problema de Data Mining y, simultáneamente, como servidor para tres clientes que realizan tareas bloqueantes. Esto se realizó utilizando una tarea \texttt{TaskCPU} con una duración de 500, y tres tareas de tipo \texttt{TaskIORandom}. Esta tarea recibe tres parámetros ($ms_cpu$, $bmin$ y $bmax$) y realiza, en tiempo $ms_cpu$, una llamada bloqueante con una duración aleatoria entre $bmin$ y $bmax$. En los tres casos se consideró $bmin = 1$ y $bim = 4$, mientras que para $ms_cpu$ se tomaron los valores $10$, $20$ y $30$.
+Se pedía escribir un lote de tareas que simulara la utilización de una
+computadora para resolver un problema de Data Mining y, simultáneamente, como
+servidor para tres clientes que realizan tareas bloqueantes. Esto se realizó
+utilizando una tarea \texttt{TaskCPU} con una duración de 500, y tres tareas de
+tipo \texttt{TaskIORandom}. Esta tarea recibe tres parámetros ($ms\_cpu$, $bmin$
+y $bmax$) y realiza, en tiempo $ms\_cpu$, una llamada bloqueante con una duración
+aleatoria entre $bmin$ y $bmax$. En los tres casos se consideró $bmin = 1$ y
+$bim = 4$, mientras que para $ms\_cpu$ se tomaron los valores $10$, $20$ y $30$.
 
 A continuación se exponen los gráficos obtenidos, considerando un costo para el cambio de contexto de 5 ciclos de CPU.
 
