@@ -69,9 +69,16 @@ int SchedRR2::tick(int cpu, const enum Motivo m) {
                     cpu_quantum[cpu]--;
                     next_pid = curr_pid;
                 } else {
-                    // Si no queda quantum, desalojo y busco al siguiente proceso
-                    q[cpu]->push(curr_pid);  // El actual vuelve a la cola
-                    next_pid = next(cpu);
+						if(!q[cpu]->empty){
+							// Si no queda quantum, desalojo y busco al siguiente proceso
+							q[cpu]->push(curr_pid);  // El actual vuelve a la cola
+							next_pid = next(cpu);
+						}
+						else{
+							// Si la cola está vacía, dejo al proceso actual
+							cpu_quantum[cpu] = def_quantum[cpu];
+							next_pid = curr_pid;
+						}
                 }
 
             }
@@ -79,7 +86,12 @@ int SchedRR2::tick(int cpu, const enum Motivo m) {
 
         // El proceso realizó una llamada bloqueante / estuvo bloqueado
         case BLOCK:
-            next_pid = next(cpu);
+			if(!q[cpu]->empty){
+				next_pid = next(cpu);
+			}
+			else{
+				next_pid = curr_pid;
+			}
             break;
 
         // El proceso terminó
