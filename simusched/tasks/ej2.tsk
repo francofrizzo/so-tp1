@@ -1,0 +1,4 @@
+TaskCPU 500
+TaskIORandom 10 1 4
+TaskIORandom 20 1 4
+TaskIORandom 30 1 4

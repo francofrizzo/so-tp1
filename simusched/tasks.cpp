@@ -32,6 +32,17 @@ void TaskConsola(int pid, vector<int> params) { // params: n, bmin, bmax
 	}
 }
 
+void TaskIORandom(int pid, vector<int> params) { // params: ms_cpu, bmin, bmax
+	int bmin = params[1];
+	int bmax = params[2];
+	srand(time(0));
+
+	uso_CPU(pid, params[0]); // Uso el CPU ms_pid milisegundos.
+
+	int t = rand() % (bmax - bmin + 1) + bmin;
+	uso_IO(pid, t);
+}
+
 void TaskBatch(int pid, vector<int> params) { // params: n
 	int cant_bloqueos = params[1];
 	int total_cpu = params[0] - cant_bloqueos - 1;
@@ -65,5 +76,6 @@ void tasks_init(void) {
 	register_task(TaskIO, 2);
 	register_task(TaskAlterno, -1);
 	register_task(TaskConsola, 3);
+	register_task(TaskIORandom, 3);
 	register_task(TaskBatch, 2);
 }

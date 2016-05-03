@@ -23,6 +23,11 @@ tasks.o: tasks.cpp tasks.h basetask.h
 ejercicio1:
 	./simusched tasks/ej1.tsk 1 1 1 SchedFCFS | python graphsched.py > ../latex/imagenes/ej1.png
 
+ejercicio2:
+	./simusched tasks/ej2.tsk 1 5 1 SchedFCFS | python graphsched.py > ../latex/imagenes/ej2_1.png
+	./simusched tasks/ej2.tsk 2 5 1 SchedFCFS | python graphsched.py > ../latex/imagenes/ej2_2.png
+	./simusched tasks/ej2.tsk 4 5 1 SchedFCFS | python graphsched.py > ../latex/imagenes/ej2_3.png
+
 ejercicio3:
 	./simusched tasks/ej3.tsk 1 1 1 SchedFCFS | python graphsched.py > ../latex/imagenes/ej3.png
 
