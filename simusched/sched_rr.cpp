@@ -66,17 +66,13 @@ int SchedRR::tick(int cpu, const enum Motivo m) {
 			else{
 				next_pid = current_pid(cpu);
 			}
-		}else{
+		}
+		else{
 			// Si llega un EXIT o un BLOCK, desalojo la tarea
 			// En caso de haber otro proceso en la cola, lo asigno
-
 			if(!this->q.empty()){
 				next_pid = this->q.front();
 				this->q.pop();
-			}
-			else{
-				// Si no hay otros procesos en la cola, no desalojo al actual
-				next_pid = (m == EXIT) ? IDLE_TASK : current_pid(cpu);
 			}
 			// Reinicio el quantum
 			this->cpu_quantum[cpu] = this->def_quantum[cpu];
