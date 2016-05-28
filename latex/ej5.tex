@@ -101,3 +101,52 @@ que es el caso donde las tareas finalizan en menor tiempo) es también un
 poco mayor que la de 10. Esto ocurre porque más allá de que finalicen antes que
 el resto, el promedio es peor, ya que cuando se utilizaba un quantum de 10, las
 tareas bloqueantes finalizaban antes.
+
+Otro análisis posible es el de evaluar los valores de las métricas seleccionadas
+para cada quantum en \texttt{TaskCPU} y \texttt{TaskConsola} por separado.
+
+\begin{figure}[H]
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			\textbf{Quantum} & \textbf{Tipo tarea} & \textbf{Latencia} & \textbf{Waiting-time} & \textbf{Turnaround} \\ \hline
+			\multirow{2}{*}{2} & \texttt{TaskCPU} & 6 & 373 & 444 \\ \cline{2-5}
+			& \texttt{TaskConsola} & 15,5 & 42 & 55 \\ \hline \hline
+			\multirow{2}{*}{10} & \texttt{TaskCPU} & 14 & 197 & 268 \\ \cline{2-5}
+			& \texttt{TaskConsola} & 39,5 & 114 & 127 \\ \hline \hline
+			\multirow{2}{*}{30} & \texttt{TaskCPU} & 34 & 125 & 196 \\ \cline{2-5}
+			& \texttt{TaskConsola} & 99,5 & 141 & 154 \\ \hline
+		\end{tabular}
+		\caption{Tiempos promedio en función del tamaño de quantum utilizado y
+		el tipo de tarea}
+	\end{center}
+\end{figure}
+
+Para la \emph{latencia}, tanto en \texttt{TaskCPU} como \texttt{TaskConsola} el
+valor incrementa junto al tamaño del quantum. Por otro lado, el
+\emph{waiting-time} al igual que el \emph{turnaround} decrementan en
+\texttt{TaskCPU} y aumentan en \texttt{TaskConsola}.
+
+El aumento de \emph{latencia} en ambos es posible de explicar como resultado
+inmediato de darle mayor quantum a cada proceso. Cada tarea tendrá que esperar
+a que termine la anterior para poder comenzar, por lo tanto si están
+recibiendo un mayor quantum es razonable que esta espera sea mayor.
+
+Con respecto al \emph{waiting-time} y \emph{turnaround}, las tareas
+\texttt{TaskConsola} consumen muy poco tiempo del CPU dado que se bloquean casi
+instantáneamente, esto es favorecido por un quantum pequeño ya que son puestas
+en ejecución con más frecuencia. Con las tareas \texttt{TaskCPU} la historia es
+distinta, ya que no se bloquean nunca utilizando así todo el quantum que
+disponen.
+
+Dicho esto, que estas métricas aumenten para \texttt{TaskConsola}
+tiene sentido ya que al bloquearse, hasta que no se ejecuten el resto de las tareas no
+vuelve a correr, prolongando así el tiempo que se encuentra esperando y su tiempo
+total de ejecución.
+
+A su vez, que las métricas disminuyan con \texttt{TaskCPU} puede justificarse
+con el hecho de que al ser una tarea que no se bloquea, requiere el mayor tiempo
+en ejecución posible, puesto que al estar en espera no realiza ningún tipo de
+progreso. Aumentando el quantum el proceso tiene más ciclos para trabajar sin
+ser interrumpido logrando finalizar en menor tiempo y disminuyendo sus
+intervalos de espera.
