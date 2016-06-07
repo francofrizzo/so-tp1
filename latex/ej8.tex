@@ -60,40 +60,82 @@ comparó el \emph{scheduler} obtenido con el desarrollado anteriormente en el
 Ejercicio 4 (\texttt{SchedRR}).
 
 Para comparar los resultados producidos por ambos \emph{schedulers}, se
-plantearon dos ejemplos de escenarios reales en los que cada uno de los modelos
-resultara superior al otro. Los escenarios ideados fueron los siguientes:
+plantearon tres ejemplos de escenarios reales; en dos de ellos, uno de los
+modelos resultó superior al otro, mientras que en el otro los resultados
+dependen de las métricas consideradas. Los escenarios ideados fueron los
+siguientes:
 
 \begin{enumerate}
-    \item En una máquina con dos CPUs y un coste de migración apreciable, se
-    ejecutan simultáneamente tres tareas que hacen un uso intensivo del
-    procesador. Además, los tiempos de \emph{quantum} asociados a cada
-    procesador son diferentes. En estas circunstancias, es esperable que un
-    scheduler con migración produzca que los procesos estén cambiando de CPU de
-    manera constante, generando un gran desperdicio de recursos. Este efecto
-    seguramente afecte negativamente métricas como el \emph{waiting-time} y el
-    \emph{turnaround} de los procesos, lo cual es indeseable en este tipo de
-    tareas no interactivas. Cabe destacar que en el caso del \emph{scheduler}
-    \texttt{SchedRR2} uno de los procesos tendrá un CPU asignado de forma
-    exclusiva, mientras que los otros dos tendrán que ``repartirse'' el otro
-    \emph{core}, reduciendo la \emph{justicia} del algoritmo. No obstante,
-    teniendo en cuenta lo antes planteado, en este contexto es claramente
-    preferible un algoritmo de \emph{scheduling} sin migración.
+    \item En una máquina con dos CPUs, se ejecuta una serie de procesos, cada
+    uno de ellos con un tiempo total de ejecución breve. Esta situación
+    produce dos aspectos a tener en cuenta: por un lado, el tiempo insumido
+    por la migración de los procesos se vuelve apreciable en comparación con
+    el utilizado para su ejecución; este inconveniente se presenta a menudo en
+    sistemas reales, donde para evitarlo muchas veces se establece una cota
+    mínima para la antigüedad de un proceso antes de poder
+    migrarlo\footnote{Milojičić, Dejan S. et al., \emph{Process migration}
+    (ACM Computing Surveys, 2000)}. Por otra parte, el hecho de que la
+    duración de todas las tareas sea similar genera una distribución
+    equilibrada entre las cargas de cada núcleo incluso al utilizar el
+    \emph{scheduler} sin migración, entendiendo como carga de un núcleo el
+    tiempo total de ejecución de los procesos asignados al mismo.
+
+    Estas circunstancias producen que las ventajas que puede presentar un
+    \emph{scheduler} con migración (balancear la carga entre los procesadores,
+    evitando que uno de ellos quede ocioso mientras hay tareas por ejecutar)
+    se vuelvan poco significativas con respecto al costo que tiene realizar la
+    migración. De esta forma, utilizar este tipo de \emph{scheduler}
+    produce una caída en el rendimiento general del sistema, afectando
+    negativamente métricas como el \emph{waiting-time} y el \emph{turnaround}
+    de los procesos. Por lo tanto, en este contexto es claramente preferible
+    un algoritmo de \emph{scheduling} sin migración.
 
     \item También en una máquina con dos CPUs, se ejecuta una tarea que hace un
     uso intensivo del CPU y varias tareas interactivas, es
     decir, que hacen un gran uso de entrada/salida. Aquí el \emph{scheduler} sin
     migración asignará a la mitad de las tareas interactivas el mismo
     \emph{core} que a la tarea intensiva, provocando una disminución en la 
-    \emph{latencia} o tiempo de respuesta de las mismas, como así también en su
-    tiempo de espera o \emph{waiting-time}. El \emph{scheduler} con migración,
-    en cambio, permitirá que, mientras la tarea intesiva utiliza un procesador, 
-    cualquiera de las tareas interactivas pueda ocupar el otro, obteniendo así
-    mejores resultados.
+    \emph{latencia} o tiempo de respuesta de las mismas. El \emph{scheduler}
+    con migración, en cambio, permitirá que, mientras la tarea intesiva
+    utiliza un procesador, cualquiera de las tareas interactivas pueda ocupar
+    el otro, obteniendo así mejores resultados para esta métrica.
+
+    No obstante, en el caso del algoritmo sin migración, se obtuvieron mejores
+    resultados para el \emph{turnaround} y el \emph{waiting-time}. Esto se
+    debe a que las tareas interactivas que resultan asignadas al core que no
+    ejecuta la tarea intensiva se ven muy beneficiadas por este hecho,
+    generando una disminución importante en los promedios de estas métricas.
+    Cabe destacar, sin embargo, que incluso a pesar de estos resultados, las
+    mejores métricas alcanzadas por algunas de las tareas interactivas tienen
+    como contrapeso un peor rendimiento por parte de las otras, lo cual tiene
+    un impacto negativo en la justicia del algoritmo. Es importante tener en
+    cuenta además que en el caso de tareas interactivas, lo que se desea es
+    minimizar el tiempo de respuesta al usuario para que el funcionamiento del
+    sistema resulte fluido; por lo tanto, en este escenario la \emph{latencia}
+    podría resultar una métrica más relevante que el \emph{turnaround} o el
+    \emph{waiting-time}.
+
+    \item Como ejemplo en el que resulta claramente conveniente el uso de
+    \emph{scheduling} con migración, se pensó en un sistema, también con dos
+    núcleos, donde los procesos llegan de forma tal que resultan distribuidos
+    de una forma poco equilibrada entre los CPUs. En este caso, al emplear el
+    algoritmo sin migración, uno de los dos procesadores queda ocioso mientras
+    mientras todavía hay procesos pendientes, asignados de forma exclusiva al
+    otro núcleo. El algoritmo con migración permite mitigar este defecto
+    redistribuyendo la carga cada vez que cambia la tarea en ejecución. Cabe
+    mencionar que, si bien la posibilidad de rebalancear la carga es uno de las
+    grandes ventajas que proporciona la migración de procesos, podría
+    mejorarse el rendimiento de un \emph{scheduler} sin migración si se
+    utilizara una estrategia más inteligente a la hora de distribuir los
+    procesos durante su carga. Las métricas utilizadas para comparar los dos
+    algoritmos fueron el \emph {waiting-time} y el \emph{turnaround},
+    obteniendo en ambos casos mejores resultados con el \emph{scheduler} con
+    migración.
 \end{enumerate}
 
 A continuación se muestran los gráficos y las mediciones obtenidas en ambas
-implementaciones para los lotes de tareas \texttt{ej8\_1} y \texttt{ej8\_2},
-realizados según los dos escenarios recién propuestos.
+implementaciones para los lotes de tareas \texttt{ej8\_1}, \texttt{ej8\_2} y
+\texttt{ej8\_3}, realizados según los tres escenarios recién propuestos.
 
 \begin{figure}[H]
     \begin{center}
@@ -109,17 +151,17 @@ realizados según los dos escenarios recién propuestos.
     \end{center}
 \end{figure}
 
-\begin{figure}[H]
+\begin{table}[H]
     \begin{center}
         \begin{tabular}{|c|c|c|c|}
             \hline
             \textbf{Scheduler} & \textbf{Waiting-time} & \textbf{Turnaround} \\ \hline
-            \texttt{SchedRR}   & 32.333 & 60 \\
-            \texttt{SchedRR2}  & 18.333 & 46 \\ \hline
+            \texttt{SchedRR}   & 39.429                & 50.857 \\
+            \texttt{SchedRR2}  & 31.714                & 43.143 \\ \hline
         \end{tabular}
         \caption{Tiempos promedio para el Escenario 1, para cada \emph{scheduler}}
     \end{center}
-\end{figure}
+\end{table}
 
 
 \begin{figure}[H]
@@ -136,14 +178,44 @@ realizados según los dos escenarios recién propuestos.
     \end{center}
 \end{figure}
 
-\begin{figure}[H]
+\begin{table}[H]
     \begin{center}
         \begin{tabular}{|c|c|c|c|}
             \hline
-            \textbf{Scheduler} & \textbf{Latencia}\\ \hline
-            \texttt{SchedRR}   & 5.286 \\
-            \texttt{SchedRR2}  & 8.714 \\ \hline
+            \textbf{Scheduler} & \textbf{Latencia} & \textbf{Waiting-time} & \textbf{Turnaround} \\ \hline
+            \texttt{SchedRR}   & 5.286             & 37.429                & 59.571 \\
+            \texttt{SchedRR2}  & 8.714             & 27.571                & 49.714 \\ \hline
         \end{tabular}
         \caption{Tiempos promedio para el Escenario 2, para cada \emph{scheduler}}
     \end{center}
+\end{table}
+
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=1\columnwidth]{imagenes/ej8_3_rr.png}
+        \caption{Escenario 3 en \emph{scheduler} con migración (\texttt{SchedRR})}
+    \end{center}
 \end{figure}
+
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=1\columnwidth]{imagenes/ej8_3_rr2.png}
+        \caption{Escenario 3 en \emph{scheduler} sin migración
+        (\texttt{SchedRR2}). Notar cómo el core 1 queda ocioso rápidamente,
+        resultando en una mala distribución de la carga que repercute
+        negativamente en el rendimiento.}
+    \end{center}
+\end{figure}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Scheduler} & \textbf{Waiting-time} & \textbf{Turnaround} \\ \hline
+            \texttt{SchedRR}   & 12                    & 22.667 \\
+            \texttt{SchedRR2}  & 17.667                & 28.333 \\ \hline
+        \end{tabular}
+        \caption{Tiempos promedio para el Escenario 3, para cada \emph{scheduler}}
+    \end{center}
+\end{table}
