@@ -51,7 +51,7 @@ así el efecto sobre la \emph{latencia}, \emph{waiting-time} y \emph{turnaround}
 Tomando los resultados anteriores se generó la siguiente tabla comparando los
 tiempos para cada tamaño de quantum seleccionado.
 
-\begin{figure}[H]
+\begin{table}[H]
 	\begin{center}
 		\begin{tabular}{|c|c|c|c|}
 			\hline
@@ -62,7 +62,7 @@ tiempos para cada tamaño de quantum seleccionado.
 		\end{tabular}
 		\caption{Tiempos promedio en función del tamaño de quantum utilizado}
 	\end{center}
-\end{figure}
+\end{table}
 
 A partir de esta información se pudieron desarrollar las siguiente conclusiones.
 Para empezar, a simple vista se puede observar que ninguno de los tres tamaños
@@ -105,7 +105,7 @@ tareas bloqueantes finalizaban antes.
 Otro análisis posible es el de evaluar los valores de las métricas seleccionadas
 para cada quantum en \texttt{TaskCPU} y \texttt{TaskConsola} por separado.
 
-\begin{figure}[H]
+\begin{table}[H]
 	\begin{center}
 		\begin{tabular}{|c|c|c|c|c|}
 			\hline
@@ -120,7 +120,7 @@ para cada quantum en \texttt{TaskCPU} y \texttt{TaskConsola} por separado.
 		\caption{Tiempos promedio en función del tamaño de quantum utilizado y
 		el tipo de tarea}
 	\end{center}
-\end{figure}
+\end{table}
 
 Para la \emph{latencia}, tanto en \texttt{TaskCPU} como \texttt{TaskConsola} el
 valor incrementa junto al tamaño del quantum. Por otro lado, el
