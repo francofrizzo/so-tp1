@@ -51,8 +51,8 @@ ejercicio7:
 ejercicio8:
 	./simusched tasks/ej8_1.tsk 2 1 6 SchedRR 8 8 | python graphsched.py > ../latex/imagenes/ej8_1_rr.png
 	./simusched tasks/ej8_1.tsk 2 1 6 SchedRR2 8 8 | python graphsched.py > ../latex/imagenes/ej8_1_rr2.png
-	./simusched tasks/ej8_2.tsk 2 1 4 SchedRR 12 4 | python graphsched.py > ../latex/imagenes/ej8_2_rr.png
-	./simusched tasks/ej8_2.tsk 2 1 4 SchedRR2 12 4 | python graphsched.py > ../latex/imagenes/ej8_2_rr2.png
+	./simusched tasks/ej8_2.tsk 2 1 4 SchedRR 10 10 | python graphsched.py > ../latex/imagenes/ej8_2_rr.png
+	./simusched tasks/ej8_2.tsk 2 1 4 SchedRR2 10 10 | python graphsched.py > ../latex/imagenes/ej8_2_rr2.png
 	./simusched tasks/ej8_3.tsk 2 1 4 SchedRR 8 8 | python graphsched.py > ../latex/imagenes/ej8_3_rr.png
 	./simusched tasks/ej8_3.tsk 2 1 4 SchedRR2 8 8 | python graphsched.py > ../latex/imagenes/ej8_3_rr2.png
 
